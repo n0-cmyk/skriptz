@@ -2,9 +2,10 @@
 function module()
 	print("JX1DX1 Noli over redroomcurse wip")
 	local Folder = game:GetService("ReplicatedStorage").Assets.Killers.Noli
-
+	local plrs = game.Players
+	local localthemes = game.SoundService:WaitForChild("LocalThemes",10) or workspace:WaitForChild("Themes",10)
+	print(localthemes.Parent.Name)
 	local config = require(Folder.Config)
-	print(config.Sounds.VoidRushWindow.Killers)
 	local config2 = Folder.Config
 	local killerfolder = workspace.Players.Killers
 	local map = workspace.Map.Ingame:FindFirstChild("Map") or workspace:FindFirstChild("SuperMap")
@@ -40,9 +41,13 @@ function module()
 	end
 	local Model = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/JX1DX1Noli-remake.rbxm", "JX1DX1ModelNew.rbxm", "Importinstance")
 	Model.Humanoid.EvaluateStateMachine = false
-
-
-
+	local themeRepce
+	for _, thing in pairs(config.Sounds.TerrorRadiusThemes) do
+					if thing.Chase then
+						print(thing.ID)
+						themeRepce = thing.ID
+					end
+				end
 	local SoundRevovery = {
 		Ambience = {og = config.Sounds.Ambience, replac = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/Breathing.ogg", "Breathing.ogg")},
 		Footsteps = {og = config.Sounds.Footsteps, replac = {
@@ -72,6 +77,7 @@ function module()
 		ObservantLoop = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/ObservantLoopGenerator.ogg", "LoopObserv.ogg"),
 		ObservantCancel = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/ObservantCancelGenerator.ogg", "CancelObserv.ogg"),
 		ObservantWarn = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/ObservantWarningGenerator.ogg", "WarningObserv.ogg"),
+		ChaseTheme = import("https://github.com/n0-cmyk/Stuffs/raw/refs/heads/main/JX1DX1New/JX1DX1Chase.ogg", "Chase.ogg"),
 	}
 
 	local conns = {}
@@ -251,6 +257,24 @@ function module()
 				end
 			end
 		end)
+					local char = kid
+					if plrs.LocalPlayer.Character == char then
+						print("Player is killer, chase theme will be replaced")
+						for _, theme in (localthemes:GetChildren()) do
+							if theme.SoundId == themeRepce then
+								theme.SoundId = SoundRevovery.ChaseTheme
+								end
+							end
+						local chaselistener = localthemes.ChildAdded:Connect(function(Theme)
+							print("added")
+							task.wait(0.03)
+							print(Theme.SoundId)
+							if Theme.SoundId == themeRepce then
+								Theme.SoundId = SoundRevovery.ChaseTheme
+							end
+						end)
+						table.insert(conns[kid], chaselistener)
+					end 
 		table.insert(conns[kid], A)
 		table.insert(conns[kid], B)
 		table.insert(conns[kid], C)
@@ -365,9 +389,9 @@ function module()
 		end
 	end)
 
+	
 	for _, generator in (map:GetChildren()) do
 		if generator.Name == "Generator" then
-			print("Tracking Generator")
 			generator.ChildAdded:Connect(function(WarnSound)
 				WarnSound.Changed:Once(function()
 					task.wait(0.06)
@@ -397,5 +421,6 @@ function module()
 			end)
 		end
 	end 
+	
 end
 module()

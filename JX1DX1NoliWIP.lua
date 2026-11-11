@@ -3,12 +3,19 @@ function module()
 	print("JX1DX1 Noli over redroomcurse wip")
 	local Folder = game:GetService("ReplicatedStorage").Assets.Killers.Noli
 	local plrs = game.Players
-	local localthemes = game.SoundService:WaitForChild("LocalThemes",10) or workspace:WaitForChild("Themes",10)
 	print(localthemes.Parent.Name)
 	local config = require(Folder.Config)
 	local config2 = Folder.Config
 	local killerfolder = workspace.Players.Killers
 	local map = workspace.Map.Ingame:FindFirstChild("Map") or workspace:FindFirstChild("SuperMap")
+	local localthemes
+	if map.Name == "Map" then
+		localthemes = game.SoundService:WaitForChild("LocalThemes")
+		print("witing for LoclTheme")
+		else
+		localthemes = workspace:WaitForChild("Themes")
+		print("waiting for Themes")
+	end
 	local VoicelineSeting = game.SoundService:FindFirstChild("Voicelines")
 	local environment = workspace.Map.Ingame
 	local tracked = {}
@@ -266,9 +273,6 @@ function module()
 								end
 							end
 						local chaselistener = localthemes.ChildAdded:Connect(function(Theme)
-							print("added")
-							task.wait(0.03)
-							print(Theme.SoundId)
 							if Theme.SoundId == themeRepce then
 								Theme.SoundId = SoundRevovery.ChaseTheme
 							end

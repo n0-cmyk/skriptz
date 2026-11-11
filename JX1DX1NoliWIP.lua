@@ -279,9 +279,8 @@ function module()
 			if star then
 				starpos[v] = {}				
 				task.spawn(function()
-					while v:IsDescendantOf(environment) and task.wait(0.3) do
+					while v:IsDescendantOf(environment) and task.wait(0.225) do
 							table.insert(starpos[v], v.Position)
-							print("positionStar = ".. tostring(v.Position))
 					end
 					task.wait(0.8)
 					starpos[v] = nil

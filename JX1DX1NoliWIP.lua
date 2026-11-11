@@ -3,18 +3,17 @@ function module()
 	print("JX1DX1 Noli over redroomcurse wip")
 	local Folder = game:GetService("ReplicatedStorage").Assets.Killers.Noli
 	local plrs = game.Players
-	print(localthemes.Parent.Name)
 	local config = require(Folder.Config)
 	local config2 = Folder.Config
 	local killerfolder = workspace.Players.Killers
 	local map = workspace.Map.Ingame:FindFirstChild("Map") or workspace:FindFirstChild("SuperMap")
 	local localthemes
 	if map.Name == "Map" then
+		print("localtheme waiting")
 		localthemes = game.SoundService:WaitForChild("LocalThemes")
-		print("witing for LoclTheme")
 		else
-		localthemes = workspace:WaitForChild("Themes")
 		print("waiting for Themes")
+		localthemes = workspace:WaitForChild("Themes")
 	end
 	local VoicelineSeting = game.SoundService:FindFirstChild("Voicelines")
 	local environment = workspace.Map.Ingame

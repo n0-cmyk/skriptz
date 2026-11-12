@@ -179,194 +179,94 @@ function module()
 				end
 
 			end
-			end
-			local A = humroot.ChildAdded:Connect(function(sound)
-				if sound:IsA("Sound") and sound.Playing == true then
-					for _, tabl in pairs(SoundRevovery) do
-						if type(tabl) == "table" and table.find(tabl.Ids, sound.SoundId) then
-							if #tabl >= 1 then
-								sound.SoundId = tabl[math.random(1, #tabl)]
-							end
-							break
-						end
-					end
-
-				end
-			end)
-			local B = star.Cursor:GetPropertyChangedSignal("Enabled"):Connect(function()
-				if star.Cursor.Enabled == false then
-					currStar.Transparency = 1
-					for _, particle in (currStar.Main:GetChildren()) do
-						if particle:IsA("ParticleEmitter") and particle.Enabled then
-							particle.Enabled = false
-						end
-					end
-				end
-				if star.Cursor.Enabled == true then
-					local c = math.random(1,4)
-					if c == 1 then
-						currStar:SetAttribute("Type", "Apple")
-						currStar.BrickColor = BrickColor.new("Medium stone grey")
-						currStar.Size = Vector3.new(1, 1.2, 1)
-						currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=16190555"
-						currStar.Mesh.Scale = Vector3.new(2.5,2.5,2.5)
-						currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=16190555"
-					elseif c == 2 then
-						currStar:SetAttribute("Type", "Tie")
-						currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=28463033"
-						currStar.Mesh.TextureId = ""
-						currStar.Mesh.Scale = Vector3.new(1.96, 1.68, 1.96)
-						currStar.BrickColor = BrickColor.new("Really red")
-						currStar.Size = Vector3.new(1.4,1.4,1.4)
-					elseif c == 3 then
-						currStar.BrickColor = BrickColor.new("Medium stone grey")
-						currStar:SetAttribute("Type", "Horns")
-						currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=15934744"
-						currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=15934762"
-						currStar.Mesh.Scale = Vector3.new(1.632, 1.632, 1.632)
-						currStar.Size = Vector3.new(1.6,1.6,1.6)
-					elseif c == 4 then
-						currStar:SetAttribute("Type", "Tinpot")
-						currStar.BrickColor = BrickColor.new("Cool yellow")
-						currStar.Size = Vector3.new(1.2, 1.2, 1.2)
-						currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=6837450"
-						currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=6837452"
-						currStar.Mesh.Scale = Vector3.new(1.333, 1.333, 1.333)
-					end
-					rig.Voidstar.Transparency = 0
-					for _, particle in (currStar.Main:GetChildren()) do
-						if particle:IsA("ParticleEmitter") then
-							particle.Enabled = true
-						end
-					end
-				end
-			end)
-			local C = star.ChildAdded:Connect(function(sound)
-				if sound:IsA("Sound") then
-					if sound.SoundId == "rbxassetid://79252746303454" or sound.SoundId == "rbxassetid://93854019010858" then
-						sound.SoundId = SoundRevovery.NovaRespawn
-					end
-				end
-			end)
-			local char = kid
-			if plrs.LocalPlayer.Character == char then
-				print("Player is killer, chase theme will be replaced")
-				for _, theme in (localthemes:GetChildren()) do
-					if theme.SoundId == "rbxassetid://114751819376426" or theme.SoundId == "rbxassetid://124371357168863" then
-						theme.SoundId = SoundRevovery.ChaseTheme
-					end
-				end
-				local chaselistener = localthemes.ChildAdded:Connect(function(Theme)
-					if Theme.SoundId == "rbxassetid://114751819376426" or Theme.SoundId == "rbxassetid://124371357168863" then
-						Theme.SoundId = SoundRevovery.ChaseTheme
-					end
-				end)
-				table.insert(conns[kid], chaselistener)
-			end 
-			table.insert(conns[kid], A)
-			table.insert(conns[kid], B)
-			table.insert(conns[kid], C)
 		end
-		environment.ChildAdded:Connect(function(v)
-			if v:FindFirstChild("Cursor") then
-				local ppl = killerfolder:GetChildren()
-				local torso
-				local dist = math.huge
-				local temp
-				local person
-				local human
-				for i = 1, #ppl do
-					person = ppl[i]
-					if person:FindFirstChild("HumanoidRootPart") and person.Name == "Noli" then
-						if person.Humanoid.Health > 0 and person:GetAttribute("SkinName") == "RedRoomNoli" then
-							temp = person:FindFirstChild("HumanoidRootPart")
-							if (temp.Position - v.Position).Magnitude < dist then
-								torso = temp.Parent
-								dist = (temp.Position - v.Position).Magnitude
-							end
+		local A = humroot.ChildAdded:Connect(function(sound)
+			if sound:IsA("Sound") and sound.Playing == true then
+				for _, tabl in pairs(SoundRevovery) do
+					if type(tabl) == "table" and table.find(tabl.Ids, sound.SoundId) then
+						if #tabl >= 1 then
+							sound.SoundId = tabl[math.random(1, #tabl)]
 						end
-					end
-				end
-				local star = currStars[torso]
-				if star then
-					starpos[v] = {}				
-					task.spawn(function()
-						while v:IsDescendantOf(environment) and task.wait(0.2) do
-							table.insert(starpos[v], v.Position)
-						end
-						task.wait(0.8)
-						starpos[v] = nil
-					end)
-					v.Cursor:FindFirstChildOfClass("ImageLabel").Visible = false
-					local clone = star:Clone()
-					clone.Parent = v
-					clone.Transparency = 0
-					clone.Name = "JX1DX1star"
-					local weld = Instance.new("Weld", v)
-					weld.Part0 = clone
-					weld.Part1 = v
-				end
-			end
-		end)
-		killerfolder.ChildAdded:Connect(function(noli)
-			if noli.Name == "Noli" and noli:GetAttribute("SkinName") then
-				if noli:GetAttribute("SkinName") == "RedRoomNoli" then
-					add(noli)
-				end
-			end
-		end)
-
-		killerfolder.ChildRemoved:Connect(function(noli)
-			if table.find(tracked, noli) then
-				table.remove(tracked, table.find(tracked, noli))
-				print("remove dd")
-				if conns[noli] then
-					print("clered cons for noli person")
-					for _, con in ipairs(conns[noli]) do con:Disconnect() end
-				end
-				currStars[noli] = nil
-			end
-		end)
-
-		for _, devo in (killerfolder:GetChildren()) do
-			if devo.Name == "Noli" and devo:GetAttribute("SkinName") then
-				if devo:GetAttribute("SkinName") == "RedRoomNoli" then
-					add(devo)
-				end
-			end
-		end
-		workspace.Terrain.ChildAdded:Connect(function(child)
-			if child.Name == "Explosion" then
-				local magnum = math.huge
-				local pposs
-				for _, pos in pairs(starpos) do
-					for _, diststar in ipairs(pos) do
-						if (diststar - child.Position).Magnitude < magnum then
-							magnum = (diststar - child.Position).Magnitude
-							pposs = diststar
-						end
-					end
-				end
-				if pposs and (pposs - child.CFrame.Position).Magnitude < 10 then
-					print("explonearJX1DX1")
-					if child:FindFirstChildOfClass("Sound") then
-						child:FindFirstChildOfClass("Sound").SoundId = SoundRevovery.NovaDeton[math.random(1, #SoundRevovery.NovaDeton)]
+						break
 					end
 				end
 
 			end
 		end)
-		game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(gui)
-			if gui.Name == "GeneratorTeleportButton" then
-				print("gui logic gone fishin'")
-				local JIcon = Instance.new("ImageButton")
+		local B = star.Cursor:GetPropertyChangedSignal("Enabled"):Connect(function()
+			if star.Cursor.Enabled == false then
+				currStar.Transparency = 1
+				for _, particle in (currStar.Main:GetChildren()) do
+					if particle:IsA("ParticleEmitter") and particle.Enabled then
+						particle.Enabled = false
+					end
+				end
+			end
+			if star.Cursor.Enabled == true then
+				local c = math.random(1,4)
+				if c == 1 then
+					currStar:SetAttribute("Type", "Apple")
+					currStar.BrickColor = BrickColor.new("Medium stone grey")
+					currStar.Size = Vector3.new(1, 1.2, 1)
+					currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=16190555"
+					currStar.Mesh.Scale = Vector3.new(2.5,2.5,2.5)
+					currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=16190555"
+				elseif c == 2 then
+					currStar:SetAttribute("Type", "Tie")
+					currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=28463033"
+					currStar.Mesh.TextureId = ""
+					currStar.Mesh.Scale = Vector3.new(1.96, 1.68, 1.96)
+					currStar.BrickColor = BrickColor.new("Really red")
+					currStar.Size = Vector3.new(1.4,1.4,1.4)
+				elseif c == 3 then
+					currStar.BrickColor = BrickColor.new("Medium stone grey")
+					currStar:SetAttribute("Type", "Horns")
+					currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=15934744"
+					currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=15934762"
+					currStar.Mesh.Scale = Vector3.new(1.632, 1.632, 1.632)
+					currStar.Size = Vector3.new(1.6,1.6,1.6)
+				elseif c == 4 then
+					currStar:SetAttribute("Type", "Tinpot")
+					currStar.BrickColor = BrickColor.new("Cool yellow")
+					currStar.Size = Vector3.new(1.2, 1.2, 1.2)
+					currStar.Mesh.MeshId = "http://www.roblox.com/asset/?id=6837450"
+					currStar.Mesh.TextureId = "http://www.roblox.com/asset/?id=6837452"
+					currStar.Mesh.Scale = Vector3.new(1.333, 1.333, 1.333)
+				end
+				rig.Voidstar.Transparency = 0
+				for _, particle in (currStar.Main:GetChildren()) do
+					if particle:IsA("ParticleEmitter") then
+						particle.Enabled = true
+					end
+				end
 			end
 		end)
-
-
+		local C = star.ChildAdded:Connect(function(sound)
+			if sound:IsA("Sound") then
+				if sound.SoundId == "rbxassetid://79252746303454" or sound.SoundId == "rbxassetid://93854019010858" then
+					sound.SoundId = SoundRevovery.NovaRespawn
+				end
+			end
+		end)
+		local char = kid
+		if plrs.LocalPlayer.Character == char then
+			print("Player is killer, chase theme will be replaced")
+			for _, theme in (localthemes:GetChildren()) do
+				if theme.SoundId == "rbxassetid://114751819376426" or theme.SoundId == "rbxassetid://124371357168863" then
+					theme.SoundId = SoundRevovery.ChaseTheme
+				end
+			end
+			local chaselistener = localthemes.ChildAdded:Connect(function(Theme)
+				if Theme.SoundId == "rbxassetid://114751819376426" or Theme.SoundId == "rbxassetid://124371357168863" then
+					Theme.SoundId = SoundRevovery.ChaseTheme
+				end
+			end)
+			table.insert(conns[kid], chaselistener)
+		end 
 		for _, generator in (map:GetChildren()) do
 			if generator.Name == "Generator" then
-				generator.ChildAdded:Connect(function(WarnSound)
+				local D = generator.ChildAdded:Connect(function(WarnSound)
+					if string.find(WarnSound.Name, kid:GetAttribute("Username")) then
 					WarnSound.Changed:Once(function()
 						task.wait(0.06)
 						for _, sond in (WarnSound:GetChildren()) do
@@ -383,7 +283,7 @@ function module()
 					for _, sond in (WarnSound:GetChildren()) do
 
 						if sond:IsA"Sound" then
-							if sond.SoundId == "rbxassetid://7112391013" or sond.SoundId == "rbxassetid://7112391013" then
+							if sond.SoundId == "rbxassetid://7112391013" then
 								sond.SoundId = SoundRevovery.ObservantPing
 							elseif sond.SoundId == "rbxassetid://99769633154277" or sond.SoundId == "rbxassetid://126044235952493" then
 								sond.SoundId = SoundRevovery.ObservantLoop
@@ -392,8 +292,111 @@ function module()
 							end
 						end
 					end
+					end
 				end)
+				table.insert(conns[kid], D)
 			end
 		end 
+		table.insert(conns[kid], A)
+		table.insert(conns[kid], B)
+		table.insert(conns[kid], C)
+	end 
+	environment.ChildAdded:Connect(function(v)
+		if v:FindFirstChild("Cursor") then
+			local ppl = killerfolder:GetChildren()
+			local torso
+			local dist = math.huge
+			local temp
+			local person
+			local human
+			for i = 1, #ppl do
+				person = ppl[i]
+				if person:FindFirstChild("HumanoidRootPart") and person.Name == "Noli" then
+					if person.Humanoid.Health > 0 and person:GetAttribute("SkinName") == "RedRoomNoli" then
+						temp = person:FindFirstChild("HumanoidRootPart")
+						if (temp.Position - v.Position).Magnitude < dist then
+							torso = temp.Parent
+							dist = (temp.Position - v.Position).Magnitude
+						end
+					end
+				end
+			end
+			local star = currStars[torso]
+			if star then
+				starpos[v] = {}				
+				task.spawn(function()
+					while v:IsDescendantOf(environment) and task.wait(0.2) do
+						table.insert(starpos[v], v.Position)
+					end
+					task.wait(0.8)
+					starpos[v] = nil
+				end)
+				v.Cursor:FindFirstChildOfClass("ImageLabel").Visible = false
+				local clone = star:Clone()
+				clone.Parent = v
+				clone.Transparency = 0
+				clone.Name = "JX1DX1star"
+				local weld = Instance.new("Weld", v)
+				weld.Part0 = clone
+				weld.Part1 = v
+			end
+		end
+	end)
+	killerfolder.ChildAdded:Connect(function(noli)
+		if noli.Name == "Noli" and noli:GetAttribute("SkinName") then
+			if noli:GetAttribute("SkinName") == "RedRoomNoli" then
+				add(noli)
+			end
+		end
+	end)
+	killerfolder.ChildRemoved:Connect(function(noli)
+		if table.find(tracked, noli) then
+			table.remove(tracked, table.find(tracked, noli))
+			print("remove dd")
+			if conns[noli] then
+				print("clered cons for noli person")
+				for _, con in ipairs(conns[noli]) do con:Disconnect() end
+			end
+			currStars[noli] = nil
+		end
+	end)
+
+	for _, devo in (killerfolder:GetChildren()) do
+		if devo.Name == "Noli" and devo:GetAttribute("SkinName") then
+			if devo:GetAttribute("SkinName") == "RedRoomNoli" then
+				add(devo)
+			end
+		end
 	end
-	module()
+	workspace.Terrain.ChildAdded:Connect(function(child)
+		if child.Name == "Explosion" then
+			local magnum = math.huge
+			local pposs
+			for _, pos in pairs(starpos) do
+				for _, diststar in ipairs(pos) do
+					if (diststar - child.Position).Magnitude < magnum then
+						magnum = (diststar - child.Position).Magnitude
+						pposs = diststar
+					end
+				end
+			end
+			if pposs and (pposs - child.CFrame.Position).Magnitude < 10 then
+				print("explonearJX1DX1")
+				if child:FindFirstChildOfClass("Sound") then
+					child:FindFirstChildOfClass("Sound").SoundId = SoundRevovery.NovaDeton[math.random(1, #SoundRevovery.NovaDeton)]
+				end
+			end
+
+		end
+	end)
+	game:GetService("Players").LocalPlayer.PlayerGui.ChildAdded:Connect(function(gui)
+		if gui.Name == "GeneratorTeleportButton" then
+			print("gui logic gone fishin'")
+			local JIcon = Instance.new("ImageButton")
+		end
+	end)
+
+
+	
+end
+module()
